@@ -8,6 +8,7 @@ from datetime import datetime
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 import time
+import json
 
 app = FastAPI()
 credentials = boto3.Session().get_credentials()
@@ -33,12 +34,14 @@ async def api_middleware(request: Request, call_next):
         "user_id": request.path_params.get("user_id"),
         "timestamp": str(int(time.time()) * 1000),
         "request": str(request.__dict__),
-        "response": response_body.decode()
+        "response": str(response.__dict__),
+        "error_message": ""
     }
     if 200 <= response.status_code < 300:
         log["status"] = "success"
     else:
         log["status"] = "failed"
+        log["error_message"] = json.loads(response_body.decode())["message"]
 
     table.put_item(Item = log)
     
