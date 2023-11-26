@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query
 import { AxiosResponse } from "axios"; 
 import { fetchAnalytics } from "api/dashboard";
 
-type AnalyticsParams = {
+export type AnalyticsParams = {
     start_time: number,
     end_time: number,
     page: number,
